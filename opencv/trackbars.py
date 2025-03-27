@@ -57,12 +57,13 @@ class Trackbar:
     }
     
     hsv_parameters = {
-        'H1': 180,
-        'S1': 255,
-        'V1': 255,
-        'H2': 180,
-        'S2': 255,
-        'V2': 255,
+        'H1': 360,
+        'S1': 100,
+        'V1': 100,
+        'H2': 360,
+        'S2': 100,
+        'V2': 100,
+        'Open/Close':1,
         'Dilations': 100,
         'Erosions': 100,
         'KernelSize':21,
@@ -273,17 +274,20 @@ class Trackbar:
         i, j = cv.getTrackbarPos('Dilations', self.window_name), cv.getTrackbarPos('Erosions', self.window_name)
         n = cv.getTrackbarPos('KernelSize', self.window_name)
         n = max(3, n if n % 2 else n + 1)
+        morph_mode = None
+        
         inverse = cv.getTrackbarPos('Invert', self.window_name)
         
-        kernel = (n, n)
-        lower = np.array([H1, S1, V1])
-        upper = np.array([H2, S2, V2])
+        kernel = np.ones((n, n), dtype = np.uint8)
+        lower = np.array([H1/2, S1*255/100, V1*255/100], dtype = np.uint8)
+        upper = np.array([H2/2, S2*255/100, V2*255/100], dtype = np.uint8)
         
         mask = cv.inRange(self.hsv, lower, upper)
-        mask = cv.bitwise_not(mask) if inverse else mask
-
         mask = cv.erode(mask, kernel, iterations=j)
         mask = cv.dilate(mask, kernel, iterations=i)
+
+        mask = np.uint8(mask)
+        mask = cv.bitwise_not(mask) if inverse else mask
 
         mask_result = cv.bitwise_and(self.copy, self.copy, mask = mask)
 
@@ -306,8 +310,8 @@ class Trackbar:
         n = max(3, n if n % 2 else n + 1)
         
         self.result = cv.Canny(self.gray, lower, upper, n)
-        self.result = cv.erode(result, (n,n), iterations=j)
-        self.result = cv.dilate(result, (n,n), iterations=i)
+        self.result = cv.erode(result, np.ones((n,n),dtype = np.uint8), iterations=j)
+        self.result = cv.dilate(result, np.ones((n,n),dtype = np.uint8), iterations=i)
 
     def _get_resize_trackbar(self):
         
