@@ -5,7 +5,7 @@ from ultralytics import YOLO
 
 
 # Path to your trained model
-model_path = r"C:\Users\Admin\Desktop\programs\ML\CNN\drone_target_detection\drone_target_classifier.h5"
+model_path = "drone_target_classifier.h5"
 
 # Load the trained MobileNet model
 model = tf.keras.models.load_model(model_path)
@@ -28,7 +28,7 @@ def target_classifier(frame):
 
 def cv_target_detector(frame):
     # Load your trained model
-    model = YOLO(r"C:\Users\Admin\Desktop\programs\ML\CNN\drone_target_detection\runs\detect\train5\weights\best.pt")
+    model = YOLO("runs\detect\train5\weights\best.pt")
 
     # Run YOLO inference
     result_frame = frame.copy()
@@ -96,3 +96,4 @@ cap.release()
 out.release()
 cv2.destroyAllWindows()
     
+
