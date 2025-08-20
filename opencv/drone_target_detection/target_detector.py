@@ -5,7 +5,7 @@ from tensorflow.keras.preprocessing import image_dataset_from_directory
 
 def yolo_target_detector(frame):
 
-    model = YOLO(r"C:\Users\Admin\Desktop\programs\ML\CNN\drone_target_detection\runs\detect\train5\weights\best.pt")
+    model = YOLO("runs\detect\train5\weights\best.pt")
 
     while True:
         ret, frame = cap.read()
@@ -19,7 +19,7 @@ def yolo_target_detector(frame):
 
 def cv_target_detector(frame):
 
-    model = YOLO(r"C:\Users\Admin\Desktop\programs\ML\CNN\drone_target_detection\runs\detect\train5\weights\best.pt")
+    model = YOLO("runs\detect\train5\weights\best.pt")
 
     result_frame = frame.copy()
     results = model(result_frame)
@@ -62,3 +62,4 @@ if __name__ == '__main__':
         
     cap.release()
     cv2.destroyAllWindows()
+
