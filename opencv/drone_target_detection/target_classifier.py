@@ -2,7 +2,7 @@ import cv2
 import tensorflow as tf
 import numpy as np
 
-model_path = r"C:\Users\Admin\Desktop\programs\ML\CNN\drone_target_detection\drone_target_classifier.h5"
+model_path = "drone_target_classifier.h5"
 model = tf.keras.models.load_model(model_path)
 class_labels = ["target", "nothing"]
 
@@ -43,3 +43,4 @@ if __name__ == "__main__":
         
     cap.release()
     cv2.destroyAllWindows()
+
