@@ -55,9 +55,9 @@ cap = cv2.VideoCapture(0)
 frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-out = cv2.VideoWriter(
-    "output.mp4", 
-    cv2.VideoWriter_fourcc(*'H264'), 15, (frame_width, frame_height))
+#out = cv2.VideoWriter(
+#    "output.mp4", 
+#    cv2.VideoWriter_fourcc(*'H264'), 15, (frame_width, frame_height))
 
 while True:
     ret, frame = cap.read()
@@ -78,12 +78,13 @@ while True:
             2, (0, 255, 255), 4)
 
     cv2.imshow('FINAL DETECTION', res_frame)
-    out.write(res_frame)
+    #out.write(res_frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
-out.release()
+#out.release()
 cv2.destroyAllWindows()
     
+
