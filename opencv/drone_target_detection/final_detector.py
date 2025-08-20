@@ -4,22 +4,17 @@ import numpy as np
 from ultralytics import YOLO
 
 
-# Path to your trained model
-model_path = "drone_target_classifier.h5"
-
-# Load the trained MobileNet model
+model_path = r"C:\Users\Admin\Desktop\programs\ML\CNN\drone_target_detection\drone_target_classifier.h5"
 model = tf.keras.models.load_model(model_path)
 
-# Define class labels (same order as training)
 class_labels = ["target", "nothing"]
 
 def target_classifier(frame):
-    # Resize to match training size
+
     img = cv2.resize(frame, (640, 640))
     img_array = np.expand_dims(img, axis=0)
-    img_array = img_array / 255.0  # normalize
+    img_array = img_array / 255.0
     
-    # Predict
     predictions = model.predict(img_array, verbose=0)
     predicted_class = np.argmax(predictions, axis=1)[0]
     confidence = np.max(predictions)
@@ -27,29 +22,25 @@ def target_classifier(frame):
     return confidence
 
 def cv_target_detector(frame):
-    # Load your trained model
-    model = YOLO("runs\detect\train5\weights\best.pt")
 
-    # Run YOLO inference
+    model = YOLO(r"C:\Users\Admin\Desktop\programs\ML\CNN\drone_target_detection\runs\detect\train5\weights\best.pt")
+
+
     result_frame = frame.copy()
     results = model(result_frame)
 
-    # Draw detections
     for result in results:
         is_box = False
         boxes = result.boxes
         for box in boxes:
-            # Get box coordinates
+
             x1, y1, x2, y2 = map(int, box.xyxy[0])
-            conf = float(box.conf[0])   # confidence
-            cls = int(box.cls[0])       # class id
-            label = model.names[cls]    # class name
+            conf = float(box.conf[0])   
+            cls = int(box.cls[0])       
+            label = model.names[cls]    
 
-            if conf > 0.90:
-                # Draw bounding box
+            if conf > 0.75:
                 cv2.rectangle(result_frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-
-                # Draw label + confidence
                 cv2.putText(result_frame, f"{label} {conf:.2f}", 
                             (x1, max(y1 - 10, 20)), cv2.FONT_HERSHEY_SIMPLEX, 
                             0.6, (0, 255, 0), 2)
@@ -66,7 +57,7 @@ frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 out = cv2.VideoWriter(
     "output.mp4", 
-    cv2.VideoWriter_fourcc(*'H264'), 10, (frame_width, frame_height))
+    cv2.VideoWriter_fourcc(*'H264'), 15, (frame_width, frame_height))
 
 while True:
     ret, frame = cap.read()
@@ -96,4 +87,3 @@ cap.release()
 out.release()
 cv2.destroyAllWindows()
     
-
